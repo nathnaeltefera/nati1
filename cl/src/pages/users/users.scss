@@ -1,29 +1,30 @@
 @import "../../styles/variables.scss";
-.users{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-top: 40px;
-    
-    .info{
-      display: flex;
-      align-items: center;
-      gap: 30px;
-      margin-bottom: 30px;
-  
-      button{
-        padding: 11px;
-        cursor: pointer;
-        border-radius: 10px;
-        background-color: $soft-bg;
-        border: none;
-        color: white;
-        border-width: 2px;
+.users {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 40px;
+  height: 60vh;
 
-        &:hover {
-            background-color:$dark-bg;
-            transition: 0.5s;
-        }
+  .info {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+
+    button {
+      padding: 11px;
+      cursor: pointer;
+      border-radius: 10px;
+      background-color: $soft-bg;
+      border: none;
+      color: white;
+      border-width: 2px;
+
+      &:hover {
+        background-color: $dark-bg;
+        transition: 0.5s;
+      }
     }
-}
   }
+}

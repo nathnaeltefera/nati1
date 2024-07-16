@@ -1,7 +1,7 @@
 import { GridColDef } from "@mui/x-data-grid";
 import "./add.scss";
 import { useState } from "react";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { db } from "../../firebase-config";
 
 type Props = {
@@ -51,7 +51,7 @@ const Add = (props: Props) => {
               <div className="item" key={column.field}>
                 <label>{column.headerName}</label>
                 <input
-                  type={column.type as string}
+                  type={column.type}
                   name={column.field}
                   placeholder={column.headerName}
                   onChange={handleChange}

@@ -1,132 +1,105 @@
-  import {
-      DataGrid,
-      GridColDef,
-      GridToolbar,
-    } from "@mui/x-data-grid";
-  import "./dataTable.scss";
-  import { Link } from "react-router-dom";
-  import { deleteDoc, doc } from "firebase/firestore";
-  import { db } from "../../firebase-config";
-  
-  type Props = {
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import "./dataTable.scss";
+import { Link } from "react-router-dom";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../../firebase-config";
+import { Dispatch, SetStateAction } from "react";
+import { set } from "date-fns";
+
+type Props = {
   columns: GridColDef[];
   rows: { id: string }[];
   slug: string;
+  setUserRows: Dispatch<SetStateAction<{ id: string }[]>>;
 };
-  
-  const DataTable = (props: Props) => {
-    // TEST THE API
-  
-    // const queryClient = useQueryClient();
-    // // const mutation = useMutation({
-    // //   mutationFn: (id: number) => {
-    // //     return fetch(`http://localhost:8800/api/${props.slug}/${id}`, {
-    // //       method: "delete",
-    // //     });
-    // //   },
-    // //   onSuccess: ()=>{
-    // //     queryClient.invalidateQueries([`all${props.slug}`]);
-    // //   }
-    // // });
-    const deleteUser = async (userId: string) => {
-      try {
-        const userRef = doc(db, "Users", userId);
-        await deleteDoc(userRef);
-        console.log("Document successfully deleted!");
-      } catch (error) {
-        console.error("Error deleting document: ", error);
-        throw new Error("Failed to delete user.");
-      }
-        };
-  
-    const handleDelete = async (id: string) => {
-      try {
-              await deleteUser(id);
-              console.log("User deleted successfully!");
-            } catch (error) {
-              console.error("Error deleting user:", error);
-              // Handle error state or display an error message
-            }
-    };
-  
-    const actionColumn: GridColDef = {
-      field: "action",
-      headerName: "Action",
-      width: 200,
-      renderCell: (params) => {
-        return (
-          <div className="action">
-            <Link to={`/${props.slug}/${params.row.id}`}>
-              <img src="/view.svg" alt="" />
-            </Link>
-            <div className="delete" onClick={() => handleDelete(params.row.id)}>
-              <img src="/delete.svg" alt="" />
-            </div>
-          </div>
-        );
-      },
-    };
-  
-    return (
-      <div className="dataTable">
-        <DataGrid
-          className="dataGrid"
-          rows={props.rows}
-          columns={[...props.columns, actionColumn]}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
-          slots={{ toolbar: GridToolbar }}
-          slotProps={{
-            toolbar: {
-              showQuickFilter: true,
-              quickFilterProps: { debounceMs: 500 },
-            },
-          }}
-          pageSizeOptions={[5]}
-          checkboxSelection
-          disableRowSelectionOnClick
-          disableColumnFilter
-          disableDensitySelector
-          disableColumnSelector
-        />
-      </div>
-    );
+
+const DataTable = (props: Props) => {
+  // TEST THE API
+
+  // const queryClient = useQueryClient();
+  // // const mutation = useMutation({
+  // //   mutationFn: (id: number) => {
+  // //     return fetch(`http://localhost:8800/api/${props.slug}/${id}`, {
+  // //       method: "delete",
+  // //     });
+  // //   },
+  // //   onSuccess: ()=>{
+  // //     queryClient.invalidateQueries([`all${props.slug}`]);
+  // //   }
+  // // });
+  const deleteUser = async (userId: string) => {
+    try {
+      const userRef = doc(db, "Users", userId);
+      await deleteDoc(userRef);
+      console.log("Document successfully deleted!");
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+      throw new Error("Failed to delete user.");
+    }
   };
-  
-  export default DataTable;
 
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteUser(id);
+      props.setUserRows((prev) => prev.filter((row) => row.id !== id));
+      console.log("User deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      // Handle error state or display an error message
+    }
+  };
 
+  const actionColumn: GridColDef = {
+    field: "action",
+    headerName: "Action",
+    width: 200,
+    renderCell: (params) => {
+      return (
+        <div className="action">
+          <Link to={`/${props.slug}/${params.row.id}`}>
+            <img src="/view.svg" alt="" />
+          </Link>
+          <div className="delete" onClick={() => handleDelete(params.row.id)}>
+            <img src="/delete.svg" alt="" />
+          </div>
+        </div>
+      );
+    },
+  };
 
+  return (
+    <div className="dataTable">
+      <DataGrid
+        autoHeight={true}
+        className="dataGrid"
+        rows={props.rows}
+        columns={[...props.columns, actionColumn]}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 10,
+            },
+          },
+        }}
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
+          toolbar: {
+            showQuickFilter: true,
+            quickFilterProps: { debounceMs: 500 },
+          },
+        }}
+        pageSizeOptions={[5]}
+        checkboxSelection
+        disableRowSelectionOnClick
+        disableColumnFilter
+        disableDensitySelector
+        disableColumnSelector
+      />
+    </div>
+  );
+};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
+export default DataTable;
 
 // import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 // import "./dataTable.scss";

@@ -209,8 +209,6 @@
 
 // export default Users;
 
-
-
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../components/dataTable/DataTable";
 import "./Users.scss";
@@ -261,7 +259,7 @@ const columns: GridColDef[] = [
   },
   {
     field: "verified",
-    headerName: "Verified",
+    headerName: "verified 1 or 2",
     width: 150,
     type: "boolean",
   },
@@ -292,7 +290,7 @@ const Users = () => {
             lastName: data.lastName || "",
             email: data.email || "",
             phone: data.phone || "",
-            createdAt: data.createdAt || "",
+            createdAt: new Date().toLocaleDateString(data.createdAt) || "",
             verified: data.verified || false,
           };
         });
@@ -322,14 +320,15 @@ const Users = () => {
         <h1>Users</h1>
         <button onClick={() => setOpen(true)}>Add New User</button>
       </div>
-      <DataTable slug="users" columns={columns} rows={userRows} />
+      <DataTable
+        setUserRows={setUserRows}
+        slug="users"
+        columns={columns}
+        rows={userRows}
+      />
       {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
     </div>
   );
 };
 
 export default Users;
-
-
-
-
